@@ -1,19 +1,29 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-export const useHomePageStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-    padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
-  },
+export const useHomePageStyles = makeStyles((theme) => {
+  const isMobile = theme.breakpoints.down('sm');
 
-  paper: {
-    flexGrow: 1,
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  },
+  const rootVerticalSpacing = isMobile ? 1 : 2;
+  const rootHorizontalSpacing = isMobile ? 2 : 3;
 
-  title: {
-    textTransform: 'capitalize',
-  },
-}));
+  return {
+    root: {
+      flexGrow: 1,
+      padding: `${theme.spacing(rootVerticalSpacing)}px ${theme.spacing(rootHorizontalSpacing)}px`,
+      width: '100%',
+      margin: 0,
+    },
+
+    paper: {
+      height: '100%',
+      position: 'relative',
+      flexGrow: 1,
+      padding: theme.spacing(2),
+      color: theme.palette.text.secondary,
+    },
+
+    title: {
+      textTransform: 'capitalize',
+    },
+  };
+});
