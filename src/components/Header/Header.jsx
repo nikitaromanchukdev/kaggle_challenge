@@ -52,11 +52,6 @@ const Header = () => {
           <Select
             className={selectClasses.select}
             label="Option"
-            renderValue={(v) => {
-              console.log(v);
-
-              return v;
-            }}
             value={quantity}
             onChange={changeHandler}
           >
