@@ -1,5 +1,6 @@
 import { DEFUALT_URI } from 'api/config';
 import formatQueryString from 'utils/formatQueryString';
+import formatSurveyFields from 'utils/formatSurveyFields';
 
 export const surveyActionTypes = {
   setDisplayQuantity: 'SET_DISPLAY_QUANTITY',
@@ -30,7 +31,8 @@ export const loadSurveys = (query = {}) => async (dispatch) => {
     const queryString = formatQueryString(query);
 
     const data = await fetch(`${DEFUALT_URI}?${queryString}`)
-      .then((response) => response.json());
+      .then((response) => response.json())
+      .then((surveys) => surveys.map(formatSurveyFields));
 
     dispatch({ type: surveyActionTypes.setSurveyData, payload: data });
   } catch (err) {
