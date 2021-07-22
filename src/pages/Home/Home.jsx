@@ -11,7 +11,7 @@ import { loadSurveys } from 'app/store/actions';
 import BarChart from 'components/Charts/BarChart/BarChart';
 
 import { useHomePageStyles } from './styles';
-import SurveysByCountry from './components/SurveysByCountry';
+import SurveysByCountry from './components/SurveysByCountry/SurveysByCountry';
 
 
 const TITLE = 'survey overview';
@@ -94,7 +94,6 @@ const Home = () => {
               data={data}
               options={{
                 indexAxis: 'y',
-
               }}
             />
           </Paper>
