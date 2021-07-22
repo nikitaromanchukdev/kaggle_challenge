@@ -37,7 +37,6 @@ export const loadSurveys = (query = {}) => async (dispatch) => {
     dispatch({ type: surveyActionTypes.setSurveyData, payload: data });
   } catch (err) {
     dispatch(setErrorState(err));
-    console.log(err); // todo: remove
   } finally {
     dispatch(setFetchingState(false));
   }
