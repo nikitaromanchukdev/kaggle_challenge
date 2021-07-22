@@ -19,7 +19,7 @@ const Header = () => {
   const quantity = useSelector((state) => {
     const { displayQuantity, options } = state.surveys;
 
-    return options.find(({ value }) => value === displayQuantity).label;
+    return options.find(({ value }) => value === displayQuantity);
   });
 
   const options = useSelector((state) => state.surveys.options);
@@ -54,6 +54,7 @@ const Header = () => {
             label="Option"
             value={quantity}
             onChange={changeHandler}
+            renderValue={(v) => v.label}
           >
             {
               options.map(({ value, label }) => (
