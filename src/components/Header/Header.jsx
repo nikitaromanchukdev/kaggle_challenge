@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import {
   AppBar,
   Select,
@@ -11,7 +11,7 @@ import { NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import routes from 'app/AppRouter/routes';
-import { surveyActionTypes } from 'app/store/actions';
+import { loadSurveys, surveyActionTypes } from 'app/store/actions';
 
 import useStyles, { useSelectStyles } from './styles';
 
@@ -23,7 +23,12 @@ const Header = () => {
   });
 
   const options = useSelector((state) => state.surveys.options);
+  const displayQuantity = useSelector((state) => state.surveys.displayQuantity);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(loadSurveys({ limit: displayQuantity }));
+  }, [ dispatch, displayQuantity ]);
 
   const changeHandler = (ev) => {
     dispatch({ type: surveyActionTypes.setDisplayQuantity, payload: ev.target.value });
@@ -52,9 +57,8 @@ const Header = () => {
           <Select
             className={selectClasses.select}
             label="Option"
-            value={quantity}
+            value={quantity.label}
             onChange={changeHandler}
-            renderValue={(v) => v.label}
           >
             {
               options.map(({ value, label }) => (
