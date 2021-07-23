@@ -1,22 +1,31 @@
-import React, {
-  Fragment,
-  memo,
-} from 'react';
+import React, { memo } from 'react';
 import { useSelector } from 'react-redux';
 import {
   countriesSelector,
   surveysByCountriesSelector,
-  gendersByCountriesSelector,
+  selectByCountry,
+  ageByCountriesSelector,
 } from 'app/store/selectors';
 
 import BarChart from 'components/Charts/BarChart/BarChart';
+import generateRandomRgb from 'utils/generateRandomRgb';
 
 
 const options = {
+  pointHitDetectionRadius: 1,
   indexAxis: 'y',
-  plugins: {},
+  plugins: {
+    tooltip: {
+      callbacks: {
+        title: ([ ctx ]) => ctx.dataset.overrideTitle || ctx.label,
+      },
+    },
+  },
   maintainAspectRatio: true,
   aspectRatio: 0.5,
+  interaction: {
+    mode: 'y',
+  },
   scales: {
     yAxes: [
       {
@@ -26,49 +35,61 @@ const options = {
         },
       },
     ],
-    xAxes: [
-      {
-        stacked: true,
-      },
-    ],
   },
+
 };
 
+
+const genderSelector = selectByCountry('gender');
+const familyHistorySelector = selectByCountry('familyHistory');
+const treatmentSelector = selectByCountry('treatment');
 
 const SurveysByCountry = () => {
   const countries = useSelector(countriesSelector);
   const surveysByCountries = useSelector(surveysByCountriesSelector);
-  const gendersByCountries = useSelector(gendersByCountriesSelector);
-
+  const gendersByCountries = useSelector(genderSelector);
+  const ageByCountry = useSelector(ageByCountriesSelector);
+  const familyHistory = useSelector(familyHistorySelector);
+  const treatmentByCountry = useSelector(treatmentSelector);
 
   const surveysByCountriesQuantity = surveysByCountries.map(({ data }) => data.length);
 
-  // console.log({ gendersByCountries });
-
   const genderStacks = Object.entries(gendersByCountries)
-    .map(([ key, data ]) => {
-      const r = Math.floor(Math.random() * 255);
-      const g = Math.floor(Math.random() * 255);
-      const b = Math.floor(Math.random() * 255);
+    .map(([ key, data ]) => ({
+      overrideTitle: 'Respondent gender',
+      label: key,
+      data: data.map((s) => ({ y: s.country, x: s.data.length })),
+      backgroundColor: generateRandomRgb(),
+      stack: 'gender',
+    }));
 
-      const color = `rgb(${r},${g},${b})`;
+  const ageStacks = Object.entries(ageByCountry)
+    .map(([ key, data ]) => ({
+      overrideTitle: 'Respondent age',
+      label: key,
+      data: data.map((s) => ({ y: s.country, x: s.data.length })),
+      backgroundColor: generateRandomRgb(),
+      stack: 'age',
+    }));
 
-      return {
-        label: key,
-        data: data.map((s) => {
-          if (s.country === 'Canada') {
-            console.log(s.country, key, s.data.length);
-          }
+  const familyHistoryStacks = Object.entries(familyHistory)
+    .map(([ key, data ]) => ({
+      overrideTitle: 'Having a family history of mental illness',
+      label: key,
+      data: data.map((s) => ({ y: s.country, x: s.data.length })),
+      backgroundColor: generateRandomRgb(),
+      stack: 'familyHistory',
+    }));
 
-          return ({ y: s.country, quantity: s.data.length });
-        }),
-        parsing: {
-          xAxisKey: 'quantity',
-        },
-        backgroundColor: color,
-        stack: 'gender',
-      };
-    });
+  const treatmentStacks = Object.entries(treatmentByCountry)
+    .map(([ key, data ]) => ({
+      overrideTitle: 'Respondent sought treatment for a mental health condition',
+      label: key,
+      data: data.map((s) => ({ y: s.country, x: s.data.length })),
+      backgroundColor: generateRandomRgb(),
+      stack: 'treatmentByCountry',
+    }));
+
 
   const data = {
     labels: countries,
@@ -76,21 +97,24 @@ const SurveysByCountry = () => {
       {
         label: 'Surveys total',
         data: surveysByCountriesQuantity,
-        backgroundColor: 'rgb(255, 99, 132)',
+        backgroundColor: 'rgba(54, 162, 235, 0.4)',
         stack: 'total',
+        borderWidth: 1,
+        borderColor: [ 'rgba(54, 162, 235, 0.7)' ],
       },
       ...genderStacks,
+      ...ageStacks,
+      ...familyHistoryStacks,
+      ...treatmentStacks,
     ],
   };
 
   return (
-    <Fragment>
-      <BarChart
-        data={data}
-        height={500}
-        options={options}
-      />
-    </Fragment>
+    <BarChart
+      data={data}
+      height={500}
+      options={options}
+    />
   );
 };
 
