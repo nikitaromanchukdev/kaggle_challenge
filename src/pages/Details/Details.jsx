@@ -1,22 +1,108 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import {
+  Grid,
+  Paper,
+  useMediaQuery,
+} from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
 
-const Details = ({ match }) => {
-  const { surveyId } = match.params;
+import BarChart from 'components/Charts/BarChart/BarChart';
+
+import useStyles from './styles';
+
+
+const TITLE = 'survey overview';
+
+const data = {
+  labels: [ '1', '2', '3', '4', '5', '6' ],
+  datasets: [
+    {
+      label: '# of Red Votes',
+      data: [ 12, 19, 3, 5, 2, 3 ],
+      backgroundColor: 'rgb(255, 99, 132)',
+    },
+    {
+      label: '# of Blue Votes',
+      data: [ 2, 3, 20, 5, 1, 4 ],
+      backgroundColor: 'rgb(54, 162, 235)',
+    },
+    {
+      label: '# of Green Votes',
+      data: [ 3, 10, 13, 15, 22, 30 ],
+      backgroundColor: 'rgb(75, 192, 192)',
+    },
+  ],
+};
+
+const Home = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const homePageClasses = useStyles();
 
   return (
-    <div>
-      {surveyId}
-    </div>
+    <Grid
+      container
+      component="section"
+      spacing={2}
+      className={homePageClasses.root}
+      direction={isMobile ? 'column' : 'row'}
+      justifyContent="space-between"
+      alignItems={isMobile ? 'center' : 'stretch'}
+    >
+      <Grid item xs={12} container>
+        <h1 className={homePageClasses.title}>{TITLE}</h1>
+      </Grid>
+
+      <Grid
+        item
+        container
+        xs={12}
+        md={6}
+        spacing={2}
+        direction="column"
+      >
+        <Grid item xs={12}>
+          <Paper className={homePageClasses.paper} />
+        </Grid>
+      </Grid>
+
+      <Grid
+        item
+        container
+        xs={12}
+        md={6}
+        spacing={2}
+      >
+        <Grid item xs={12}>
+          <Paper className={homePageClasses.paper}>
+            <BarChart
+              data={data}
+              options={{
+                indexAxis: 'y',
+              }}
+            />
+          </Paper>
+        </Grid>
+
+        <Grid item xs={12}>
+          <Paper className={homePageClasses.paper}>
+            <BarChart
+              data={data}
+            />
+          </Paper>
+        </Grid>
+
+        <Grid item xs={12}>
+          <Paper className={homePageClasses.paper}>
+            <h2>Polar Area</h2>
+            <BarChart
+              data={data}
+            />
+          </Paper>
+        </Grid>
+      </Grid>
+    </Grid>
   );
 };
 
-Details.propTypes = {
-  match: PropTypes.shape(),
-};
-
-Details.defaultProps = {
-  match: null,
-};
-
-export default Details;
+export default Home;

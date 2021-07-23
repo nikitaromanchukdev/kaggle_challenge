@@ -1,118 +1,35 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  Grid,
-  Paper,
-  useMediaQuery,
-} from '@material-ui/core';
-import { useTheme } from '@material-ui/core/styles';
+import { Grid, Paper } from '@material-ui/core';
+import SurveysByCountry from 'pages/Home/components/SurveysByCountry/SurveysByCountry';
+import React from 'react';
 
-import { loadSurveys } from 'app/store/actions';
-import BarChart from 'components/Charts/BarChart/BarChart';
-
-import { useHomePageStyles } from './styles';
-import SurveysByCountry from './components/SurveysByCountry/SurveysByCountry';
-
+import useStyles from './styles';
 
 const TITLE = 'survey overview';
 
-
-const data = {
-  labels: [ '1', '2', '3', '4', '5', '6' ],
-  datasets: [
-    {
-      label: '# of Red Votes',
-      data: [ 12, 19, 3, 5, 2, 3 ],
-      backgroundColor: 'rgb(255, 99, 132)',
-    },
-    {
-      label: '# of Blue Votes',
-      data: [ 2, 3, 20, 5, 1, 4 ],
-      backgroundColor: 'rgb(54, 162, 235)',
-    },
-    {
-      label: '# of Green Votes',
-      data: [ 3, 10, 13, 15, 22, 30 ],
-      backgroundColor: 'rgb(75, 192, 192)',
-    },
-  ],
-};
-
-const Home = () => {
-  const dispatch = useDispatch();
-
-  const displayQuantity = useSelector((state) => state.surveys.displayQuantity);
-
-
-  useEffect(() => {
-    dispatch(loadSurveys({ limit: displayQuantity }));
-  }, [ dispatch, displayQuantity ]);
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const homePageClasses = useHomePageStyles();
+const Details = () => {
+  const classes = useStyles();
 
   return (
     <Grid
       container
       component="section"
       spacing={2}
-      className={homePageClasses.root}
-      direction={isMobile ? 'column' : 'row'}
-      justifyContent="space-between"
-      alignItems={isMobile ? 'center' : 'stretch'}
+      className={classes.root}
     >
       <Grid item xs={12} container>
-        <h1 className={homePageClasses.title}>{TITLE}</h1>
+        <h1 className={classes.title}>{TITLE}</h1>
       </Grid>
 
       <Grid
         item
         container
         xs={12}
-        md={6}
         spacing={2}
         direction="column"
       >
         <Grid item xs={12}>
-          <Paper className={homePageClasses.paper}>
+          <Paper className={classes.paper}>
             <SurveysByCountry />
-          </Paper>
-        </Grid>
-      </Grid>
-
-      <Grid
-        item
-        container
-        xs={12}
-        md={6}
-        spacing={2}
-      >
-        <Grid item xs={12}>
-          <Paper className={homePageClasses.paper}>
-            <BarChart
-              data={data}
-              options={{
-                indexAxis: 'y',
-              }}
-            />
-          </Paper>
-        </Grid>
-
-        <Grid item xs={12}>
-          <Paper className={homePageClasses.paper}>
-            <BarChart
-              data={data}
-            />
-          </Paper>
-        </Grid>
-
-        <Grid item xs={12}>
-          <Paper className={homePageClasses.paper}>
-            <h2>Polar Area</h2>
-            <BarChart
-              data={data}
-            />
           </Paper>
         </Grid>
       </Grid>
@@ -120,4 +37,5 @@ const Home = () => {
   );
 };
 
-export default Home;
+
+export default Details;

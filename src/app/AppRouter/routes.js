@@ -1,5 +1,5 @@
-import Details from 'pages/Details/Details';
 import Home from 'pages/Home/Home';
+import Details from 'pages/Details/Details';
 
 export default [
   {
@@ -10,7 +10,7 @@ export default [
     exact: true,
   },
   {
-    path: '/details/:surveyId',
+    path: '/details',
     link: '/details',
     key: 'Details',
     component: Details,
