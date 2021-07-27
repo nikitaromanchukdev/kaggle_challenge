@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Grid,
   Paper,
+  Typography,
   useMediaQuery,
 } from '@material-ui/core';
 import { useTheme } from '@material-ui/core/styles';
@@ -9,9 +10,10 @@ import { useTheme } from '@material-ui/core/styles';
 import BarChart from 'components/Charts/BarChart/BarChart';
 
 import useStyles from './styles';
+import WorkInterfere from './components/WorkInterfere/WorkInterfere';
 
 
-const TITLE = 'survey overview';
+const TITLE = 'survey details';
 
 const data = {
   labels: [ '1', '2', '3', '4', '5', '6' ],
@@ -37,20 +39,22 @@ const data = {
 const Home = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const homePageClasses = useStyles();
+  const classes = useStyles();
 
   return (
     <Grid
       container
       component="section"
       spacing={2}
-      className={homePageClasses.root}
+      className={classes.root}
       direction={isMobile ? 'column' : 'row'}
       justifyContent="space-between"
       alignItems={isMobile ? 'center' : 'stretch'}
     >
       <Grid item xs={12} container>
-        <h1 className={homePageClasses.title}>{TITLE}</h1>
+        <Typography variant="h4" component="h1" className={classes.title}>
+          {TITLE}
+        </Typography>
       </Grid>
 
       <Grid
@@ -62,7 +66,7 @@ const Home = () => {
         direction="column"
       >
         <Grid item xs={12}>
-          <Paper className={homePageClasses.paper} />
+          <Paper className={classes.paper} />
         </Grid>
       </Grid>
 
@@ -74,7 +78,7 @@ const Home = () => {
         spacing={2}
       >
         <Grid item xs={12}>
-          <Paper className={homePageClasses.paper}>
+          <Paper className={classes.paper}>
             <BarChart
               data={data}
               options={{
@@ -85,7 +89,7 @@ const Home = () => {
         </Grid>
 
         <Grid item xs={12}>
-          <Paper className={homePageClasses.paper}>
+          <Paper className={classes.paper}>
             <BarChart
               data={data}
             />
@@ -93,11 +97,8 @@ const Home = () => {
         </Grid>
 
         <Grid item xs={12}>
-          <Paper className={homePageClasses.paper}>
-            <h2>Polar Area</h2>
-            <BarChart
-              data={data}
-            />
+          <Paper className={classes.paper}>
+            <WorkInterfere />
           </Paper>
         </Grid>
       </Grid>

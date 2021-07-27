@@ -24,6 +24,7 @@ export default makeStyles((theme) => {
 
     title: {
       textTransform: 'capitalize',
+      margin: `${theme.spacing(3)}px 0`,
     },
   };
 });
