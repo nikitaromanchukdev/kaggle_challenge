@@ -2,7 +2,8 @@ module.exports = {
   root: true,
   env: {
     browser: true,
-    es2020: true,
+    es2021: true,
+    node: true,
   },
 
   extends: [
@@ -20,20 +21,15 @@ module.exports = {
     'jsx-a11y',
   ],
 
-  // parser: '@babel/eslint-parser',
 
-  // parserOptions: {
-  //   ecmaVersion: 'latest',
-  //   sourceType: 'module',
-  //   ecmaFeatures: {
-  //     jsx: true,
-  //     modules: true,
-  //   },
-  //   requireConfigFile: false,
-  //   babelOptions: {
-  //     presets: [ '@babel/preset-react' ],
-  //   },
-  // },
+  parserOptions: {
+    parser: '@babel/eslint-parser',
+    ecmaVersion: 12,
+    sourceType: 'module',
+    ecmaFeatures: {
+      jsx: true,
+    },
+  },
 
   settings: {
     'import/resolver': {
@@ -42,10 +38,7 @@ module.exports = {
         paths: [
           'src',
         ],
-        extensions: [
-          '.js',
-          '.jsx',
-        ],
+        extensions: [ '.js', '.jsx' ],
       },
     },
   },

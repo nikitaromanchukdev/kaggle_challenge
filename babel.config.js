@@ -1,4 +1,5 @@
 module.exports = {
+  presets: [ '@babel/preset-react' ],
   plugins: [
     '@babel/plugin-syntax-dynamic-import',
     [
@@ -11,7 +12,7 @@ module.exports = {
         },
         stripExtensions: [
           '.js',
-          '.vue',
+          '.jsx',
         ],
       },
     ],
