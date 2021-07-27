@@ -31,7 +31,10 @@ const Header = () => {
   }, [ dispatch, displayQuantity ]);
 
   const changeHandler = (ev) => {
-    dispatch({ type: surveyActionTypes.setDisplayQuantity, payload: ev.target.value });
+    dispatch({
+      type: surveyActionTypes.setDisplayQuantity,
+      payload: ev.target.value,
+    });
   };
 
   const classes = useStyles();
@@ -57,14 +60,12 @@ const Header = () => {
           <Select
             className={selectClasses.select}
             label="Option"
-            value={quantity.label}
+            value={quantity?.label}
             onChange={changeHandler}
           >
-            {
-              options.map(({ value, label }) => (
-                <MenuItem key={value} value={value}>{label}</MenuItem>
-              ))
-            }
+            {options.length && options.map((o) => (
+              <MenuItem key={o.value} value={o.label}>{o.label}</MenuItem>
+            ))}
           </Select>
         </Toolbar>
       </AppBar>

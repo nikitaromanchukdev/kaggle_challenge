@@ -5,7 +5,7 @@ const DEFAULT_ITEM_QUANTITY = 100;
 const surveysInitiallState = {
   displayQuantity: DEFAULT_ITEM_QUANTITY,
   options: [
-    { label: '100', value: 100 },
+    { label: DEFAULT_ITEM_QUANTITY, value: 100 },
     { label: '500', value: 500 },
     { label: 'All', value: '' },
   ],
@@ -16,12 +16,14 @@ export const surveys = (state = surveysInitiallState, action) => {
   const { payload, type } = action;
 
   switch (type) {
-    case surveyActionTypes.setDisplayQuantity:
+    case surveyActionTypes.setDisplayQuantity: {
+      const { value } = state.options.find((o) => o.label === payload);
+
       return {
         ...state,
-        displayQuantity: payload,
+        displayQuantity: value,
       };
-
+    }
     case surveyActionTypes.setSurveyData:
       return {
         ...state,
