@@ -1,4 +1,4 @@
-import { Grid, Paper } from '@material-ui/core';
+import { Grid, Paper, Typography } from '@material-ui/core';
 import SurveysByCountry from 'pages/Home/components/SurveysByCountry/SurveysByCountry';
 import React from 'react';
 
@@ -17,7 +17,9 @@ const Details = () => {
       className={classes.root}
     >
       <Grid item xs={12} container>
-        <h1 className={classes.title}>{TITLE}</h1>
+        <Typography variant="h4" component="h1" className={classes.title}>
+          {TITLE}
+        </Typography>
       </Grid>
 
       <Grid
