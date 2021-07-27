@@ -1,6 +1,9 @@
 import _ from 'lodash';
 import { createSelector } from 'reselect';
 
+const SEPARATOR_SYMBOL = '+/+';
+
+
 const dataSelector = (state) => state.surveys.data;
 
 export const countriesSelector = createSelector(
@@ -11,13 +14,25 @@ export const countriesSelector = createSelector(
   )
 );
 
-// export const gendersSelector = createSelector(
-//   dataSelector,
-//   (surveys) => surveys.reduce(
-//     ((result, { gender }) => (result.includes(gender) ? result : [ ...result, gender ])),
-//     []
-//   )
-// );
+export const withWorkInterfereSelector = createSelector(
+  dataSelector,
+  (surveys) => surveys.filter((s) => s.workInterfere !== 'Never')
+);
+
+export const employeesQuantitySelector = createSelector(
+  dataSelector,
+  withWorkInterfereSelector,
+  (surveysTotal, withInterfere) => ({
+    proportion: withInterfere.length / surveysTotal.length,
+    data: Object
+      .entries(_.groupBy(withInterfere, 'treatment'))
+      .map(([ treatment, data ]) => ({
+        treatment,
+        data,
+        proportion: (data.length / withInterfere.length) * 100,
+      })),
+  })
+);
 
 export const surveysByCountriesSelector = createSelector(
   dataSelector,
@@ -33,7 +48,6 @@ export const surveysByCountriesSelector = createSelector(
 //     .map(([ gender, data ]) => ({ gender, data }))
 // );
 
-const SEPARATOR_SYMBOL = '+/+';
 
 export const gendersByCountriesSelector = createSelector(
   dataSelector,
