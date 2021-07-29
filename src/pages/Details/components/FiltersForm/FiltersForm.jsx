@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  Button,
   FormControl,
   InputLabel,
   makeStyles,
@@ -13,6 +14,10 @@ import { countriesSelector, employeesQuantitySelector, filtersSelector } from 'a
 
 
 const useStyles = makeStyles((theme) => ({
+  container: {
+    display: 'flex',
+    alignItems: 'center',
+  },
   formControl: {
     margin: theme.spacing(1),
     minWidth: 120,
@@ -28,18 +33,22 @@ const FiltersForm = () => {
   const countries = useSelector(countriesSelector);
   const empoyeeQuantities = useSelector(employeesQuantitySelector);
 
+  const changeFilters = (values) => dispatch(setFilters(values));
+
   const classes = useStyles();
 
   return (
-    <section>
+    <section className={classes.container}>
       <FormControl className={classes.formControl}>
-        <InputLabel id="country-select-label">Country</InputLabel>
+        <InputLabel id="country-select-label">
+          Country
+        </InputLabel>
 
         <Select
           labelId="country-select-label"
           id="country-select"
           value={filters.country}
-          onChange={(ev) => { dispatch(setFilters({ country: ev.target.value })); }}
+          onChange={(ev) => { changeFilters({ country: ev.target.value }); }}
         >
           <MenuItem value="">None</MenuItem>
           {countries.map((c) => <MenuItem key={c} value={c}>{c}</MenuItem>)}
@@ -53,12 +62,21 @@ const FiltersForm = () => {
           labelId="employees-select-label"
           id="employees-select"
           value={filters.noEmployees}
-          onChange={(ev) => { dispatch(setFilters({ noEmployees: ev.target.value })); }}
+          onChange={(ev) => { changeFilters({ noEmployees: ev.target.value }); }}
         >
           <MenuItem value="">None</MenuItem>
           {empoyeeQuantities.map((c) => <MenuItem key={c} value={c}>{c}</MenuItem>)}
         </Select>
       </FormControl>
+
+      <Button
+        variant="contained"
+        color="secondary"
+        style={{ marginLeft: 'auto' }}
+        onClick={() => { changeFilters(); }}
+      >
+        Reset
+      </Button>
     </section>
   );
 };
