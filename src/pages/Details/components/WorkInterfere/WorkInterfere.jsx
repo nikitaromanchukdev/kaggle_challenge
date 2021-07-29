@@ -1,25 +1,34 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, memo } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { useSelector } from 'react-redux';
-
-import { employeesQuantitySelector } from 'app/store/selectors';
 import { Typography } from '@material-ui/core';
+
+import { treatmentSelector } from 'app/store/selectors';
+import { roundToPrecision } from 'utils/math';
 
 
 const options = {
   plugins: {
     tooltip: {
       callbacks: {
-        label: (ctx) => `${ctx.label} - ${ctx.parsed}%`,
+        label: (ctx) => `${ctx.label} - ${roundToPrecision(ctx.parsed, 2).toFixed(2)}%`,
       },
     },
   },
 };
 
 const WorkInterfere = () => {
-  const { proportion, data: surveyData } = useSelector(employeesQuantitySelector);
+  const { proportion, data: surveyData } = useSelector(treatmentSelector);
 
-  const proportionOutput = `${proportion * 100}%`;
+  if (Number.isNaN(proportion)) {
+    return (
+      <Typography variant="subtitle1" style={{ textAlign: 'center', marginBottom: 12 }}>
+        No data matched
+      </Typography>
+    );
+  }
+
+  const proportionOutput = (proportion * 100).toFixed(2);
 
   const data = {
     labels: surveyData.map((payload) => payload.treatment),
@@ -38,10 +47,10 @@ const WorkInterfere = () => {
   return (
     <Fragment>
       <Typography variant="subtitle1" style={{ textAlign: 'center', marginBottom: 12 }}>
-        {`${proportionOutput} of respondents feel that their mental health condition interfere with work.`}
+        {`${proportionOutput}% of respondents feel that their mental health condition interfere with work.`}
       </Typography>
       <Typography variant="subtitle2" style={{ textAlign: 'center' }}>
-        {`On the graph below you can see how many of them sought 
+        {`The graph below you can see how many of them sought 
         treatment for a mental health condition.`}
       </Typography>
       <div className="chartWrapper">
@@ -51,4 +60,4 @@ const WorkInterfere = () => {
   );
 };
 
-export default WorkInterfere;
+export default memo(WorkInterfere);
