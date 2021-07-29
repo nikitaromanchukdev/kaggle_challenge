@@ -26,5 +26,12 @@ export default makeStyles((theme) => {
       textTransform: 'capitalize',
       margin: `${theme.spacing(3)}px 0`,
     },
+
+    nestedContainer: {
+      margin: 0,
+      '&.MuiGrid-item': {
+        padding: 0,
+      },
+    },
   };
 });
