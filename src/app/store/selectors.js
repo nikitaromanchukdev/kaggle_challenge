@@ -39,6 +39,19 @@ export const withWorkInterfereSelector = createSelector(
   (surveys) => surveys.filter((s) => s.workInterfere !== 'Never')
 );
 
+export const benefitsSelector = createSelector(
+  filteredDataSelector,
+  (surveysTotal) => ({
+    data: Object.entries(_.groupBy(surveysTotal, 'benefits')).map(([
+      benefits,
+      data,
+    ]) => ({
+      benefits,
+      data,
+      proportion: (data.length / surveysTotal.length) * 100,
+    })),
+  })
+);
 
 // complex selectors
 
@@ -55,6 +68,17 @@ export const treatmentSelector = createSelector(
         proportion: (data.length / withInterfere.length) * 100,
       })),
   })
+);
+
+export const mentalPhysicalSelector = createSelector(
+  filteredDataSelector,
+  (surveysTotal) => Object
+    .entries(_.groupBy(surveysTotal, 'mentalVsPhysical'))
+    .map(([ mentalVsPhysical, data ]) => ({
+      mentalVsPhysical,
+      data,
+      proportion: data.length / surveysTotal.length,
+    }))
 );
 
 export const surveysByCountriesSelector = createSelector(
@@ -125,21 +149,6 @@ export const familyHistoryByCountriesSelector = createSelector(
 
     return _.groupBy(countryGenderArray, 'familyHistory');
   }
-);
-
-
-export const benefitsSelector = createSelector(
-  dataSelector,
-  (surveysTotal) => ({
-    data: Object.entries(_.groupBy(surveysTotal, 'benefits')).map(([
-      benefits,
-      data,
-    ]) => ({
-      benefits,
-      data,
-      proportion: (data.length / surveysTotal.length) * 100,
-    })),
-  })
 );
 
 
