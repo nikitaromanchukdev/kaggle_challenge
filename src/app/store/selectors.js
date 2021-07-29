@@ -3,24 +3,47 @@ import { createSelector } from 'reselect';
 
 const SEPARATOR_SYMBOL = '+/+';
 
-
+// base selectors
 const dataSelector = (state) => state.surveys.data;
+export const filtersSelector = (state) => state.surveys.filters;
 
-export const countriesSelector = createSelector(
-  dataSelector,
-  (surveys) => surveys.reduce(
-    ((result, { country }) => (result.includes(country) ? result : [ ...result, country ])),
-    []
-  )
+export const activeFiltersSelector = createSelector(
+  filtersSelector,
+  (filters) => Object
+    .entries(filters)
+    .filter(([ , filterValue ]) => !!filterValue)
+    .reduce((result, [ filterKey, filterValue ]) => ({ ...result, [filterKey]: filterValue }), {})
 );
 
-export const withWorkInterfereSelector = createSelector(
+export const filteredDataSelector = createSelector(
+  [ dataSelector, activeFiltersSelector ],
+  (surveys, filters) => _.filter(surveys, filters)
+);
+
+
+// primitive selectors
+export const countriesSelector = createSelector(
   dataSelector,
-  (surveys) => surveys.filter((s) => s.workInterfere !== 'Never')
+  (surveys) => _.uniqBy(surveys, 'country').map((s) => s.country)
 );
 
 export const employeesQuantitySelector = createSelector(
   dataSelector,
+  (surveys) => _.uniqBy(surveys, 'noEmployees')
+    .map((s) => s.noEmployees)
+    .sort((prev, next) => (prev.length > next.length ? 1 : -1))
+);
+
+export const withWorkInterfereSelector = createSelector(
+  filteredDataSelector,
+  (surveys) => surveys.filter((s) => s.workInterfere !== 'Never')
+);
+
+
+// complex selectors
+
+export const treatmentSelector = createSelector(
+  filteredDataSelector,
   withWorkInterfereSelector,
   (surveysTotal, withInterfere) => ({
     proportion: withInterfere.length / surveysTotal.length,
@@ -102,6 +125,21 @@ export const familyHistoryByCountriesSelector = createSelector(
 
     return _.groupBy(countryGenderArray, 'familyHistory');
   }
+);
+
+
+export const benefitsSelector = createSelector(
+  dataSelector,
+  (surveysTotal) => ({
+    data: Object.entries(_.groupBy(surveysTotal, 'benefits')).map(([
+      benefits,
+      data,
+    ]) => ({
+      benefits,
+      data,
+      proportion: (data.length / surveysTotal.length) * 100,
+    })),
+  })
 );
 
 
