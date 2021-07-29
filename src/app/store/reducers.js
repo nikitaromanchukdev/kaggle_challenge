@@ -1,13 +1,14 @@
 import { surveyActionTypes, metaActionTypes } from './actions';
 
 const DEFAULT_ITEM_QUANTITY = 100;
+const DEFAULT_FILTERS = {
+  country: '',
+  noEmployees: '',
+};
 
 const surveysInitiallState = {
   displayQuantity: DEFAULT_ITEM_QUANTITY,
-  filters: {
-    country: '',
-    noEmployees: '',
-  },
+  filters: DEFAULT_FILTERS,
 
   options: [
     { label: DEFAULT_ITEM_QUANTITY, value: 100 },
@@ -30,15 +31,19 @@ export const surveys = (state = surveysInitiallState, action) => {
       };
     }
 
-    case surveyActionTypes.setFilters:
-      return {
-        ...state,
-        filters: {
+    case surveyActionTypes.setFilters: {
+      const filters = payload
+        ? {
           ...state.filters,
           ...payload,
-        },
-      };
+        }
+        : DEFAULT_FILTERS;
 
+      return {
+        ...state,
+        filters,
+      };
+    }
     case surveyActionTypes.setSurveyData:
       return {
         ...state,
