@@ -5,6 +5,7 @@ import formatSurveyFields from 'utils/formatSurveyFields';
 export const surveyActionTypes = {
   setDisplayQuantity: 'SET_DISPLAY_QUANTITY',
   setSurveyData: 'SET_DATA',
+  setFilters: 'SET_FILTERS',
 };
 
 export const metaActionTypes = {
@@ -22,6 +23,13 @@ const setErrorState = (newState = null) => ({
   payload: newState,
 });
 
+
+// public actions
+
+export const setFilters = (payload) => ({
+  type: surveyActionTypes.setFilters,
+  payload,
+});
 
 export const loadSurveys = (query = {}) => async (dispatch) => {
   dispatch(setErrorState());

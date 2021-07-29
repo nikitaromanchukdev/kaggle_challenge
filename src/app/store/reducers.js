@@ -4,6 +4,11 @@ const DEFAULT_ITEM_QUANTITY = 100;
 
 const surveysInitiallState = {
   displayQuantity: DEFAULT_ITEM_QUANTITY,
+  filters: {
+    country: '',
+    noEmployees: '',
+  },
+
   options: [
     { label: DEFAULT_ITEM_QUANTITY, value: 100 },
     { label: '500', value: 500 },
@@ -24,6 +29,16 @@ export const surveys = (state = surveysInitiallState, action) => {
         displayQuantity: value,
       };
     }
+
+    case surveyActionTypes.setFilters:
+      return {
+        ...state,
+        filters: {
+          ...state.filters,
+          ...payload,
+        },
+      };
+
     case surveyActionTypes.setSurveyData:
       return {
         ...state,
