@@ -20,6 +20,14 @@ const options = {
 const Benefits = () => {
   const { data: surveyData } = useSelector(benefitsSelector);
 
+  if (!surveyData.length) {
+    return (
+      <Typography variant="subtitle1" style={{ textAlign: 'center', marginBottom: 12 }}>
+        No data matched
+      </Typography>
+    );
+  }
+
   const data = {
     labels: surveyData.map((payload) => payload.benefits),
     datasets: [
