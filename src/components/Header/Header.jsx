@@ -43,22 +43,25 @@ const Header = () => {
   return (
     <header className="appHeader">
       <AppBar position="static">
-        <Toolbar className={classes.linksList}>
-          {routes.map(({ key, link, exact = false }) => (
-            <Typography className={classes.navLinkWrapper} variant="h6" color="inherit" key={key}>
-              <NavLink
-                className="navLink"
-                activeClassName={classes.navLinkSelected}
-                to={link}
-                exact={exact}
-              >
-                {key}
-              </NavLink>
-            </Typography>
-          )) }
+        <Toolbar className={classes.toolbar}>
+          <nav className={classes.linksList}>
+            {routes.map(({ key, link, exact = false }) => (
+              <Typography className={classes.navLinkWrapper} variant="h6" color="inherit" key={key}>
+                <NavLink
+                  className="navLink"
+                  activeClassName={classes.navLinkSelected}
+                  to={link}
+                  exact={exact}
+                >
+                  {key}
+                </NavLink>
+              </Typography>
+            )) }
+          </nav>
 
           <Select
-            className={selectClasses.select}
+            variant="outlined"
+            classes={selectClasses}
             label="Option"
             value={quantity?.label}
             onChange={changeHandler}
