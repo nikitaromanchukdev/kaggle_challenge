@@ -7,19 +7,20 @@ import {
 } from '@material-ui/core';
 import { useTheme } from '@material-ui/core/styles';
 
-
 import WorkInterfere from './components/WorkInterfere/WorkInterfere';
 import Benefits from './components/Benefits/Benefits';
 import useStyles from './styles';
 import FiltersForm from './components/FiltersForm/FiltersForm';
+import MentalVsPhysical from './components/MentalVsPhysical/MentalVsPhysical';
 
 
 const TITLE = 'survey details';
 
 
-const Home = () => {
+const Details = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
 
   const classes = useStyles();
 
@@ -69,7 +70,7 @@ const Home = () => {
       >
         <Grid item xs={12}>
           <Paper className={classes.paper}>
-            <Benefits />
+            <MentalVsPhysical />
           </Paper>
         </Grid>
 
@@ -82,7 +83,9 @@ const Home = () => {
           justifyContent="space-between"
         >
           <Grid item xs={6}>
-            <Paper className={classes.paper} />
+            <Paper className={classes.paper}>
+              <Benefits />
+            </Paper>
           </Grid>
           <Grid item xs={6}>
             <Paper className={classes.paper} />
@@ -99,4 +102,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Details;
