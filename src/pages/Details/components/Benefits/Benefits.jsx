@@ -5,6 +5,7 @@ import { Typography } from '@material-ui/core';
 
 import { benefitsSelector } from 'app/store/selectors';
 import { roundToPrecision } from 'utils/math';
+import ChartFallback from 'components/ChartFallback';
 
 
 const options = {
@@ -18,25 +19,21 @@ const options = {
 };
 
 const Benefits = () => {
-  const { data: surveyData } = useSelector(benefitsSelector);
+  const surveyData = useSelector(benefitsSelector);
 
   if (!surveyData.length) {
-    return (
-      <Typography variant="subtitle1" style={{ textAlign: 'center', marginBottom: 12 }}>
-        No data matched
-      </Typography>
-    );
+    return <ChartFallback />;
   }
 
   const data = {
-    labels: surveyData.map((payload) => payload.benefits),
+    labels: surveyData.map((payload) => payload.key),
     datasets: [
       {
         data: surveyData.map((payload) => payload.proportion),
         backgroundColor: [
           'rgba(255, 99, 132, 0.5)',
           'rgba(54, 162, 235, 0.5)',
-          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.5)',
         ],
         hoverOffset: 24,
       },
@@ -45,7 +42,7 @@ const Benefits = () => {
 
   return (
     <div className="chartWrapper">
-      <Typography variant="subtitle1" style={{ textAlign: 'center', marginBottom: 12 }}>
+      <Typography variant="subtitle2" style={{ textAlign: 'center', marginBottom: 12 }}>
         Respondents answering whether their employer provides mental health benefits
       </Typography>
       <div className="chartWrapper">
