@@ -12,6 +12,8 @@ import Benefits from './components/Benefits/Benefits';
 import useStyles from './styles';
 import FiltersForm from './components/FiltersForm/FiltersForm';
 import MentalVsPhysical from './components/MentalVsPhysical/MentalVsPhysical';
+import CareOptions from './components/CareOptions/CareOptions';
+import StatisticsByAge from './components/StatisticsByAge/StatisticsByAge';
 
 
 const TITLE = 'survey details';
@@ -20,7 +22,6 @@ const TITLE = 'survey details';
 const Details = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
 
   const classes = useStyles();
 
@@ -57,7 +58,9 @@ const Details = () => {
         direction="column"
       >
         <Grid item xs={12}>
-          <Paper className={classes.paper} />
+          <Paper className={classes.paper}>
+            <StatisticsByAge />
+          </Paper>
         </Grid>
       </Grid>
 
@@ -88,7 +91,9 @@ const Details = () => {
             </Paper>
           </Grid>
           <Grid item xs={6}>
-            <Paper className={classes.paper} />
+            <Paper className={classes.paper}>
+              <CareOptions />
+            </Paper>
           </Grid>
         </Grid>
 
