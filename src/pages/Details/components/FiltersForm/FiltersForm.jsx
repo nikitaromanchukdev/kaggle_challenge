@@ -7,6 +7,8 @@ import {
   makeStyles,
   MenuItem,
   Select,
+  useMediaQuery,
+  useTheme,
 } from '@material-ui/core';
 
 import { setFilters } from 'app/store/actions';
@@ -18,12 +20,24 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
   },
+  containerMobile: {
+    flexDirection: 'column',
+  },
+
   formControl: {
     margin: theme.spacing(1),
     minWidth: 120,
   },
+
   selectEmpty: {
     marginTop: theme.spacing(2),
+  },
+
+  resetButton: {
+    marginLeft: 'auto',
+  },
+  resetButtonMobile: {
+    marginLeft: 0,
   },
 }));
 
@@ -36,9 +50,11 @@ const FiltersForm = () => {
   const changeFilters = (values) => dispatch(setFilters(values));
 
   const classes = useStyles();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
-    <section className={classes.container}>
+    <section className={`${classes.container} ${isMobile && classes.containerMobile}`}>
       <FormControl className={classes.formControl}>
         <InputLabel id="country-select-label">
           Country
@@ -72,7 +88,7 @@ const FiltersForm = () => {
       <Button
         variant="contained"
         color="secondary"
-        style={{ marginLeft: 'auto' }}
+        className={`${classes.resetButton} ${isMobile && classes.resetButtonMobile}`}
         onClick={() => { changeFilters(); }}
       >
         Reset
