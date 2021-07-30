@@ -85,12 +85,12 @@ const Details = () => {
           spacing={2}
           justifyContent="space-between"
         >
-          <Grid item xs={6}>
+          <Grid item xs={12} md={6}>
             <Paper className={classes.paper}>
               <Benefits />
             </Paper>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} md={6}>
             <Paper className={classes.paper}>
               <CareOptions />
             </Paper>
