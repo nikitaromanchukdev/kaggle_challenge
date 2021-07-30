@@ -1,7 +1,39 @@
 import _ from 'lodash';
 import { createSelector } from 'reselect';
+import { roundToPrecision } from 'utils/math';
 
 const SEPARATOR_SYMBOL = '+/+';
+const COMPARISON_AGE = 40;
+
+const AGE_GROUPS = [
+  { key: 50, label: '50+' },
+  { key: 40, label: '40+' },
+  { key: 30, label: '30+' },
+  { key: 25, label: '25+' },
+  { key: 20, label: '20+' },
+  { key: 0, label: 'Below 20' },
+];
+
+// shared grouping functions
+const getDataByKey = (fieldKey) => (surveys) => Object
+  .entries(_.groupBy(surveys, fieldKey))
+  .map(([ fieldKeyValue, data ]) => ({
+    key: fieldKeyValue,
+    data,
+    proportion: (data.length / surveys.length),
+    quantity: data.length,
+  }));
+
+const groupByAgeGroups = (o) => {
+  const ageGroupMatched = AGE_GROUPS.find((group) => o.key >= group.key);
+
+  if (!ageGroupMatched) {
+    return AGE_GROUPS.find((g) => !g.key).label;
+  }
+
+  return ageGroupMatched.label;
+};
+
 
 // base selectors
 const dataSelector = (state) => state.surveys.data;
@@ -21,7 +53,7 @@ export const filteredDataSelector = createSelector(
 );
 
 
-// primitive selectors
+// primitive data selectors
 export const countriesSelector = createSelector(
   dataSelector,
   (surveys) => _.uniqBy(surveys, 'country').map((s) => s.country)
@@ -36,49 +68,97 @@ export const employeesQuantitySelector = createSelector(
 
 export const withWorkInterfereSelector = createSelector(
   filteredDataSelector,
-  (surveys) => surveys.filter((s) => s.workInterfere !== 'Never')
+  (filteredSurveys) => filteredSurveys.filter((s) => s.workInterfere !== 'Never')
+);
+
+export const careOptionsSelector = createSelector(
+  filteredDataSelector,
+  getDataByKey('careOptions')
 );
 
 export const benefitsSelector = createSelector(
   filteredDataSelector,
-  (surveysTotal) => ({
-    data: Object.entries(_.groupBy(surveysTotal, 'benefits')).map(([
-      benefits,
-      data,
-    ]) => ({
-      benefits,
-      data,
-      proportion: (data.length / surveysTotal.length) * 100,
-    })),
-  })
+  getDataByKey('benefits')
 );
 
-// complex selectors
+export const ageSelector = createSelector(
+  filteredDataSelector,
+  getDataByKey('age')
+);
 
-export const treatmentSelector = createSelector(
+// complex data selectors
+export const withWorkInterfereByAge = createSelector(
+  filteredDataSelector,
+  (filteredSurveys) => {
+    const ages = getDataByKey('age')(filteredSurveys);
+    const agesGrouped = _.groupBy(ages, groupByAgeGroups);
+
+    const agesWithWorkInterfere = getDataByKey(
+      (o) => `${o.workInterfere}${SEPARATOR_SYMBOL}${o.age}`
+    )(filteredSurveys);
+
+    const workInterfereByAges = agesWithWorkInterfere
+      .map(({ key, data }) => {
+        const [ workInterfere, age ] = key.split(SEPARATOR_SYMBOL);
+
+        return {
+          data,
+          workInterfere,
+          age,
+          key: age,
+        };
+      });
+
+    const workInterfereByAgeGroups = Object
+      .entries(_.groupBy(
+        workInterfereByAges,
+        (o) => `${groupByAgeGroups(o)}${SEPARATOR_SYMBOL}${o.workInterfere}`
+      ))
+      .map(([ key, data ]) => {
+        const [ ageGroup, workInterfere ] = key.split(SEPARATOR_SYMBOL);
+
+        return {
+          workInterfere,
+          ageGroup,
+          quantity: data.reduce(
+            (result, di) => result + di.data.length,
+            0
+          ),
+          data,
+          ageGroupKey: AGE_GROUPS.find((g) => g.label === ageGroup).key,
+        };
+      });
+
+    const surveysByAgeGroups = Object
+      .entries(agesGrouped)
+      .map(([ ageGroup, data ]) => ({
+        quantity: data.reduce(
+          (result, di) => result + roundToPrecision(di.quantity),
+          0
+        ),
+        ageGroup,
+        ageGroupKey: AGE_GROUPS.find((g) => g.label === ageGroup).key,
+      }));
+
+    return {
+      workInterfereByAgeGroups: getDataByKey('workInterfere')(workInterfereByAgeGroups),
+      surveysByAgeGroups: _.sortBy(surveysByAgeGroups, 'ageGroupKey'),
+    };
+  }
+);
+
+export const treatmentWithWorkInterfereSelector = createSelector(
   filteredDataSelector,
   withWorkInterfereSelector,
-  (surveysTotal, withInterfere) => ({
-    proportion: withInterfere.length / surveysTotal.length,
-    data: Object
-      .entries(_.groupBy(withInterfere, 'treatment'))
-      .map(([ treatment, data ]) => ({
-        treatment,
-        data,
-        proportion: (data.length / withInterfere.length) * 100,
-      })),
+  (filteredSurveys, withInterfere) => ({
+    proportion: withInterfere.length / filteredSurveys.length,
+    data: getDataByKey('treatment')(withInterfere),
   })
 );
 
 export const mentalPhysicalSelector = createSelector(
   filteredDataSelector,
-  (surveysTotal) => Object
-    .entries(_.groupBy(surveysTotal, 'mentalVsPhysical'))
-    .map(([ mentalVsPhysical, data ]) => ({
-      mentalVsPhysical,
-      data,
-      proportion: data.length / surveysTotal.length,
-    }))
+  getDataByKey('mentalVsPhysical')
 );
 
 export const surveysByCountriesSelector = createSelector(
@@ -87,14 +167,6 @@ export const surveysByCountriesSelector = createSelector(
     .entries(_.groupBy(surveys, 'country'))
     .map(([ country, data ]) => ({ country, data }))
 );
-
-// export const surveysByGenderSelector = createSelector(
-//   dataSelector,
-//   (surveys) => Object
-//     .entries(_.groupBy(surveys, 'gender'))
-//     .map(([ gender, data ]) => ({ gender, data }))
-// );
-
 
 export const gendersByCountriesSelector = createSelector(
   dataSelector,
@@ -112,7 +184,6 @@ export const gendersByCountriesSelector = createSelector(
   }
 );
 
-const COMPARISON_AGE = 40;
 export const ageByCountriesSelector = createSelector(
   dataSelector,
   (data) => {
@@ -150,7 +221,6 @@ export const familyHistoryByCountriesSelector = createSelector(
     return _.groupBy(countryGenderArray, 'familyHistory');
   }
 );
-
 
 export const selectByCountry = (
   selectionKey
