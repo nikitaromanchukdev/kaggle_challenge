@@ -3,7 +3,7 @@ import { Doughnut } from 'react-chartjs-2';
 import { useSelector } from 'react-redux';
 import { Typography } from '@material-ui/core';
 
-import { treatmentSelector } from 'app/store/selectors';
+import { treatmentWithWorkInterfereSelector } from 'app/store/selectors';
 import { roundToPrecision } from 'utils/math';
 
 
@@ -18,7 +18,7 @@ const options = {
 };
 
 const WorkInterfere = () => {
-  const { proportion, data: surveyData } = useSelector(treatmentSelector);
+  const { proportion, data: surveyData } = useSelector(treatmentWithWorkInterfereSelector);
 
   if (Number.isNaN(proportion)) {
     return (
@@ -31,12 +31,12 @@ const WorkInterfere = () => {
   const proportionOutput = (proportion * 100).toFixed(2);
 
   const data = {
-    labels: surveyData.map((payload) => payload.treatment),
+    labels: surveyData.map((payload) => payload.key),
     datasets: [
       {
         data: surveyData.map((payload) => payload.proportion),
         backgroundColor: [
-          'rgba(255, 99, 132, 0.5)',
+          'rgba(153, 102, 255, 0.5)',
           'rgba(54, 162, 235, 0.5)',
         ],
         hoverOffset: 24,
