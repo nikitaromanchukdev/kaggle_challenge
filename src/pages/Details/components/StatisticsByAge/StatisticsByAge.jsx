@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { withWorkInterfereByAge } from 'app/store/selectors';
 import { Bar } from 'react-chartjs-2';
 import { Typography } from '@material-ui/core';
+import ChartFallback from 'components/ChartFallback';
 
 const mapColors = {
   Often: 'rgba(75, 192, 192, 0.5)',
@@ -60,6 +61,10 @@ const options = {
 
 const StatisticsByAge = () => {
   const { surveysByAgeGroups, workInterfereByAgeGroups } = useSelector(withWorkInterfereByAge);
+
+  if (!surveysByAgeGroups.length || !workInterfereByAgeGroups.length) {
+    return <ChartFallback />;
+  }
 
   const workInterfereStacks = workInterfereByAgeGroups.map((item) => ({
     label: item.key,

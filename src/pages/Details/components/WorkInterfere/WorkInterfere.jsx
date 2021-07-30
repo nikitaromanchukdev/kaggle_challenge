@@ -5,6 +5,7 @@ import { Typography } from '@material-ui/core';
 
 import { treatmentWithWorkInterfereSelector } from 'app/store/selectors';
 import { roundToPrecision } from 'utils/math';
+import ChartFallback from 'components/ChartFallback';
 
 
 const options = {
@@ -22,9 +23,7 @@ const WorkInterfere = () => {
 
   if (Number.isNaN(proportion)) {
     return (
-      <Typography variant="subtitle1" style={{ textAlign: 'center', marginBottom: 12 }}>
-        No data matched
-      </Typography>
+      <ChartFallback />
     );
   }
 
