@@ -10,7 +10,7 @@ json-server api reference [here](https://github.com/typicode/json-server)
 - [Chart JS](https://www.chartjs.org/) - extremely flexible and the most popular chart library for JS
 - [React-chartjs-2](https://reactchartjs.github.io/) - library providing react wrapper components for more comfortable usage of ChartJS with React
   
-The choice in favor of every single technology from the list above was made because of already gained experience in working with them. Charts & ui components library where chosen also because of both technologies are popular, well supported & handy :)
+The choice in favor of every single technology from the list above was made because of already gained experience in working with them. Charts & ui components libraries where chosen also because of both technologies are popular, well supported & handy
 
 ### In order to make things work you should have a few tools installed:
 - [Node.JS](https://nodejs.org/en/) of version either 12.18.2 or 14.16.0
