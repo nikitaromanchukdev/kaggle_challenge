@@ -5,7 +5,7 @@ import { Typography } from '@material-ui/core';
 
 import { mentalPhysicalSelector } from 'app/store/selectors';
 import { roundToPrecision } from 'utils/math';
-
+import ChartFallback from 'components/ChartFallback';
 
 const options = {
   pointHitDetectionRadius: 1,
@@ -49,33 +49,27 @@ const options = {
 const MentalVsPhysical = () => {
   const mentalPhysical = useSelector(mentalPhysicalSelector);
 
-
-  console.log(mentalPhysical);
-
   if (!mentalPhysical.length) {
-    return (
-      <Typography variant="subtitle1" style={{ textAlign: 'center', marginBottom: 12 }}>
-        No data matched
-      </Typography>
-    );
+    return <ChartFallback />;
   }
 
   const data = {
-    labels: mentalPhysical.map(({ mentalVsPhysical }) => mentalVsPhysical),
+    labels: mentalPhysical.map((o) => o.key),
     datasets: [
       {
         label: '% of votes total',
         data: mentalPhysical.map((dataset) => dataset.proportion * 100),
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
-        borderColor: 'rgba(255, 99, 132, 1)',
+        backgroundColor: 'rgba(255, 159, 64, 0.5)',
+        borderColor: 'rgba(255, 159, 64, 1)',
       },
     ],
   };
 
   return (
     <Fragment>
-      <Typography variant="subtitle1" style={{ textAlign: 'center', marginBottom: 12 }}>
-        of respondents feel that their mental health condition interfere with work.
+      <Typography variant="subtitle2" style={{ textAlign: 'center', marginBottom: 12 }}>
+        {`Respondents answering if they feel that your employer 
+          takes mental health as seriously as physical health`}
       </Typography>
       <div className="chartWrapper">
         <Radar data={data} options={options} />
