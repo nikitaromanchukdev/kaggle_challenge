@@ -7,8 +7,8 @@ import {
   ageByCountriesSelector,
 } from 'app/store/selectors';
 
-import BarChart from 'components/Charts/BarChart/BarChart';
 import generateRandomRgb from 'utils/generateRandomRgb';
+import { Bar } from 'react-chartjs-2';
 
 
 const options = {
@@ -36,7 +36,6 @@ const options = {
       },
     ],
   },
-
 };
 
 
@@ -90,7 +89,6 @@ const SurveysByCountry = () => {
       stack: 'treatmentByCountry',
     }));
 
-
   const data = {
     labels: countries,
     datasets: [
@@ -110,11 +108,13 @@ const SurveysByCountry = () => {
   };
 
   return (
-    <BarChart
-      data={data}
-      height={500}
-      options={options}
-    />
+    <div className="chartWrapper">
+      <Bar
+        data={data}
+        height={500}
+        options={options}
+      />
+    </div>
   );
 };
 
